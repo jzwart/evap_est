@@ -1,29 +1,38 @@
-# evap function for CR 
-evapCalc<-function(airT,jDay,lat){
-  #saturated Vapor Density 
-  svd<-5.018+(.32321*airT)+(0.0081847*airT^2)+(0.00031243*airT^3) 
-  
-  #Daylength 
-  degToRad<-2*pi/360
-  radToDeg<-180/pi
-  
-  #day angle gamma (radians) 
-  dayAngle<-2*pi*(jDay-1)/365 
-  
-  #declination of the sun 'delta' (radians)
-  dec<-0.006918-0.399912*cos(dayAngle)+0.070257*sin(dayAngle)-
-    0.006758*cos(2*dayAngle)+0.000907*sin(2*dayAngle)-0.002697*
-    cos(3*dayAngle)+0.00148*sin(3*dayAngle)
-  
-  # sunrise hour angle 'omega' (degrees) 
-  latRad<-lat*degToRad
-  sunriseHourAngle<-acos(-tan(latRad)*tan(dec))*radToDeg 
-  
-  #sunrise and sunset times (decimal hours, relative to solar time) 
-  sunrise<-12-sunriseHourAngle/15
-  sunset<-12+sunriseHourAngle/15
-  dayLength<-sunset-sunrise #day length in hours
-  
-  evap = 0.55*((dayLength/12)^2)*(svd/100)*25.4 #calculates evaporation for each jDay (units are mm/day)
-  return(evap)
+
+evap_calc <- function(ind_file, lakes_file, temp_ind_file, remake_file, gd_config){
+
+  temp <- readRDS(sc_retrieve(temp_ind_file, remake_file = remake_file))
+
+  evans <- read.csv(lakes_file, stringsAsFactors=FALSE)
+
+  evans <- evans %>%
+    mutate(Latitude = ifelse(grepl('N', Latitude),
+                             (as.numeric(substr(Latitude, 1, 2)) +
+                                (as.numeric(substr(Latitude, 5,6)) / 60)),
+                             -1*(as.numeric(substr(Latitude, 1, 2)) +
+                                   (as.numeric(substr(Latitude, 5,6)) / 60))),
+           Longitude = ifelse(grepl('E', Longitude),
+                              as.numeric(regmatches(Longitude,
+                                                    gregexpr('^[0-9]*',
+                                                             Longitude))) +
+                                (as.numeric(regmatches(Longitude,
+                                                       gregexpr(' [0-9]{2}',
+                                                                Longitude)))/60),
+                              180 + (180 - (as.numeric(regmatches(Longitude,
+                                                                  gregexpr('^[0-9]*',
+                                                                           Longitude))) +
+                                              (as.numeric(regmatches(Longitude,
+                                                                     gregexpr(' [0-9]{2}',
+                                                                              Longitude)))/60)))))
+
+  # calc evap for each lake on each day
+  temp$evap_mm_day <- lapply(evans$Name, function(lake){
+    evap_func(airT = temp$tave[temp$lake==lake],
+              jDay = seq(1,365),
+              lat = evans$Latitude[evans$Name == lake])
+  }) %>% unlist()
+
+  data_file <- as_data_file(ind_file)
+  saveRDS(temp_out, data_file)
+  gd_put(remote_ind = ind_file, local_source = data_file, config_file = gd_config)
 }

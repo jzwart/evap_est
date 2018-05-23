@@ -31,7 +31,7 @@ get_temp <- function(ind_file, lakes_file, tmax_file, tmin_file, gd_config){
   lats <- tmax$dim$lat$vals
   longs <- tmax$dim$lon$vals
 
-  temp_out <- array(NA, dim = c(nrow(evans), 365, 3)) # lake, doy, variables [tmax, tmin, tave]
+  temp_out <- data_frame()
 
   for(lake in 1:nrow(evans)){
     # find closest lat / long and extract tmax & tmin
@@ -42,17 +42,24 @@ get_temp <- function(ind_file, lakes_file, tmax_file, tmin_file, gd_config){
 
     # dim = [degrees E, degrees N, time]
     # tmax
-    temp_out[lake,,1] <- ncvar_get(tmax, tmax$var$tmax,
+    cur_tmax <- ncvar_get(tmax, tmax$var$tmax,
                                    start = c(cur_long, cur_lat, 1),
                                    count = c(1, 1, -1), raw_datavals = TRUE)
 
     #tmin
-    temp_out[lake,,2] <- ncvar_get(tmin, tmin$var$tmin,
+    cur_tmin <- ncvar_get(tmin, tmin$var$tmin,
                                    start = c(cur_long, cur_lat, 1),
                                    count = c(1, 1, -1), raw_datavals = TRUE)
 
     #tave
-    temp_out[lake,,3] <- (temp_out[lake,,1] + temp_out[lake,,2]) / 2
+    cur_tave <- (cur_tmax + cur_tmin) / 2
+
+    temp_out <- bind_rows(temp_out,
+                          data_frame(lake = rep(evans$Name[lake], length(cur_tmax)),
+                                     doy = seq(1,length(cur_tmax)),
+                                     tmax = cur_tmax,
+                                     tmin = cur_tmin,
+                                     tave = cur_tave))
   }
 
   data_file <- as_data_file(ind_file)

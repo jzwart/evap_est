@@ -12,13 +12,15 @@ file_extensions:
 sources:
   - 1_data/src/evap_calc.R
   - 1_data/src/get_temp.R
+  - 1_data/src/evap_func.R
 
 targets:
 
   1_data:
     depends:
       - 1_data/out/temp.rds.ind
-      - 1_data/out/evap_est.rds.ind
+      - 1_data/out/temp.rds
+      - 1_data/out/evap.rds.ind
 
   1_data/out/temp.rds.ind:
     command: get_temp(
@@ -30,3 +32,12 @@ targets:
   1_data/out/temp.rds:
     command: gd_get('1_data/out/temp.rds.ind', config_file = 'lib/cfg/gd_config.yml')
 
+  1_data/out/evap.rds.ind:
+    command: evap_calc(
+      ind_file = target_name,
+      lakes_file = I('1_data/in/ngeo3051-s2.csv'),
+      temp_ind_file = '1_data/out/temp.rds.ind',
+      remake_file = I('1_data.yml'),
+      gd_config = 'lib/cfg/gd_config.yml')
+  1_data/out/evap.rds:
+    command: gd_get('1_data/out/evap.rds.ind', config_file = 'lib/cfg/gd_config.yml')
