@@ -1,0 +1,32 @@
+target_default: 1_data
+
+include:
+  - lib.yml
+
+packages:
+  - ncdf4
+
+file_extensions:
+  - ind
+
+sources:
+  - 1_data/src/evap_calc.R
+  - 1_data/src/get_temp.R
+
+targets:
+
+  1_data:
+    depends:
+      - 1_data/out/temp.rds.ind
+      - 1_data/out/evap_est.rds.ind
+
+  1_data/out/temp.rds.ind:
+    command: get_temp(
+      ind_file = target_name,
+      lakes_file = I('1_data/in/ngeo3051-s2.csv'),
+      tmax_file = I('1_data/in/tmax.day.ltm.nc'),
+      tmin_file = I('1_data/in/tmin.day.ltm.nc'),
+      gd_config = 'lib/cfg/gd_config.yml')
+  1_data/out/temp.rds:
+    command: gd_get('1_data/out/temp.rds.ind', config_file = 'lib/cfg/gd_config.yml')
+

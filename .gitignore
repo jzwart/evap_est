@@ -1,0 +1,13 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*/out/*
+!*/out/*.ind
+.httr-oauth
+lib/cfg/gd_config.yml
+.remake
+*/in/*
+!*/in/*.ind
+*_tasks.yml
+*/tmp/*
