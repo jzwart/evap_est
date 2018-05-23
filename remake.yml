@@ -1,4 +1,4 @@
-target_default: 1_data
+target_default: 1_data/out/evap.rds
 
 include:
   - 1_data.yml

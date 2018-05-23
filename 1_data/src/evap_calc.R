@@ -32,7 +32,8 @@ evap_calc <- function(ind_file, lakes_file, temp_ind_file, remake_file, gd_confi
               lat = evans$Latitude[evans$Name == lake])
   }) %>% unlist()
 
+
   data_file <- as_data_file(ind_file)
-  saveRDS(temp_out, data_file)
+  saveRDS(temp, data_file)
   gd_put(remote_ind = ind_file, local_source = data_file, config_file = gd_config)
 }

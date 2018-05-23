@@ -21,6 +21,7 @@ targets:
       - 1_data/out/temp.rds.ind
       - 1_data/out/temp.rds
       - 1_data/out/evap.rds.ind
+      - 1_data/out/evap.rds
 
   1_data/out/temp.rds.ind:
     command: get_temp(
