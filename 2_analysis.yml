@@ -1,0 +1,39 @@
+target_default: 2_analysis
+
+include:
+  - lib.yml
+
+file_extensions:
+  - ind
+
+sources:
+  - 2_analysis/src/evap_annual.R
+
+targets:
+
+  1_data:
+    depends:
+      - 1_data/out/evap.rds
+      - 1_data/out/ice_dur.rds
+
+  2_analysis:
+    depends:
+      - 2_analysis/out/evap_annual.rds.ind
+      - 2_analysis/out/evap_annual.rds
+
+  1_data/out/evap.rds:
+    command: gd_get('1_data/out/evap.rds.ind', config_file = 'lib/cfg/gd_config.yml')
+
+  1_data/out/ice_dur.rds:
+    command: gd_get('1_data/out/ice_dur.rds.ind', config_file = 'lib/cfg/gd_config.yml')
+
+  2_analysis/out/evap_annual.rds.ind:
+    command: evap_annual(
+      ind_file = target_name,
+      evap_ind_file = '1_data/out/evap.rds.ind',
+      ice_dur_ind_file = '1_data/out/ice_dur.rds.ind',
+      remake_file = I('2_analysis.yml'),
+      gd_config = 'lib/cfg/gd_config.yml')
+  2_analysis/out/evap_annual.rds:
+    command: gd_get('2_analysis/out/evap_annual.rds.ind', config_file = 'lib/cfg/gd_config.yml')
+

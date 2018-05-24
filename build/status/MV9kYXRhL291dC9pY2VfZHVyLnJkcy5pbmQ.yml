@@ -1,0 +1,13 @@
+version: 0.3.0
+name: 1_data/out/ice_dur.rds.ind
+type: file
+hash: 13330c49222261e79720399a3aaff9cb
+time: 2018-05-24 16:37:42 UTC
+depends:
+  1_data/out/temp.rds.ind: b985fe60ec9b83216eb494a9fae34e50
+  lib/cfg/gd_config.yml: d3e0debfc19ebde208bb08bf5636ed95
+fixed: 920e7ea51682ef464c5ee0bd6d5f035f
+code:
+  functions:
+    ice_duration: c9c59939f08a39ab1d02d47ff0e7d27a
+

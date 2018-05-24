@@ -1,6 +1,9 @@
-target_default: 1_data/out/evap.rds
+target_default: report
 
 include:
   - 1_data.yml
+  - 2_analysis.yml
 
 targets:
+
+

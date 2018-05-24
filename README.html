@@ -124,7 +124,11 @@ $(document).ready(function () {
 <div id="evap_est" class="section level1">
 <h1>evap_est</h1>
 <p>Pull down evaporation estimates for Evans et al. 2017 lakes using</p>
-<pre><code>evap_est &lt;- readRDS(sc_retrieve('1_data/out/evap.rds.ind', remake_file = '1_data.yml'))</code></pre>
+<pre><code>evap_est &lt;- readRDS(sc_retrieve('1_data/out/evap.rds.ind', remake_file = '1_data.yml'))
+
+evap_est %&gt;%
+group_by(lake) %&gt;%
+summarise(mean_evap = mean(evap_mm_day))</code></pre>
 </div>
 
 

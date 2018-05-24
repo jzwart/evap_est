@@ -1,0 +1,14 @@
+version: 0.3.0
+name: 2_analysis/out/evap_annual.rds.ind
+type: file
+hash: b5c3425130da7722028e69498d0cf6ae
+time: 2018-05-24 17:23:21 UTC
+depends:
+  1_data/out/evap.rds.ind: afed9f409c045d2a8adfaa97e7e4b247
+  1_data/out/ice_dur.rds.ind: 13330c49222261e79720399a3aaff9cb
+  lib/cfg/gd_config.yml: d3e0debfc19ebde208bb08bf5636ed95
+fixed: 6e1615ec06a5c2e0d7fddf367be264a9
+code:
+  functions:
+    evap_annual: 55657e06233fb54539bcfb782e7e3f9d
+
