@@ -10,7 +10,7 @@ evap_annual <- function(ind_file, evap_ind_file, ice_dur_ind_file, remake_file, 
     cur_dur = ice_dur$ice_dur_days[ice_dur$Name==lake]
     cur_evap = evap[evap$lake==lake,]
     annual_evap = cur_evap[sort.list(cur_evap$tave),] %>% # sorting by low to high temp and taking
-      slice(round(cur_dur):nrow(.)) %>%
+      slice(round(cur_dur+1):nrow(.)) %>%
       group_by(lake) %>%
       summarise(annual_evap_m = sum(evap_mm_day)/1000) # annual evap in m
   }) %>% bind_rows()

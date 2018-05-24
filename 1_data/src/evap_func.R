@@ -23,6 +23,6 @@ evap_func <- function(airT,jDay,lat){
   sunset<-12+sunriseHourAngle/15
   dayLength<-sunset-sunrise #day length in hours
 
-  evap = 0.55*((dayLength/12)^2)*(svd/100)*25.4 #calculates evaporation for each jDay (units are mm/day)
+  evap = 0.55*((dayLength/12)^2)*(svd/100)*25.4 #calculates evaporation for each jDay (units are mm/day); See Rosenberry et al. (2007) Journal of Hydrology 340: 149-166 Table 1, Hamon (1961)
   return(evap)
 }

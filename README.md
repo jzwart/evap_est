@@ -3,5 +3,5 @@
 Pull down evaporation estimates for Evans et al. 2017 lakes using 
 
 ```
-evap_est <- readRDS(sc_retrieve('1_data/out/evap.rds.ind', remake_file = '1_data.yml'))
+evap_est <- readRDS(sc_retrieve('2_analysis/out/evap_annual.rds.ind', remake_file = '2_analysis.yml'))
 ```
